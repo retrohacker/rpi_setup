@@ -1,5 +1,23 @@
 #!/bin/bash
 
+echo '================================================'
+echo -n -e '\e[0;31m' # Blue
+echo ' ____  ____ ___   ____  _____ _____ _   _ ____  '
+echo '|  _ \|  _ \_ _| / ___|| ____|_   _| | | |  _ \ '
+echo '| |_) | |_) | |  \___ \|  _|   | | | | | | |_) |'
+echo '|  _ <|  __/| |   ___) | |___  | | | |_| |  __/ '
+echo '|_| \_\_|  |___| |____/|_____| |_|  \___/|_|    '
+echo
+echo -n -e '\e[0;37m' # White
+echo '      Pi Image Generator by @retrohacker        '
+echo -n -e '\e[0m' # Reset color
+echo '================================================'
+echo
+echo -n -e '\e[0;34m' # Blue
+echo 'Downloading image...'
+echo -n -e '\e[0m' # Reset color
+echo
+
 URL=https://downloads.raspberrypi.org/raspbian_lite_latest.torrent
 
 echo "killall transmission-cli" > $PWD/end.sh
@@ -16,6 +34,12 @@ if [ -z "`ls | grep '.*\.img'`" ]
 then
   unzip *.zip
 fi
+
+echo
+echo -n -e '\e[0;34m' # Blue
+echo 'Setting up SSH and WiFi...'
+echo -n -e '\e[0m' # Reset color
+echo
 
 BOOT_OFFSET=`sudo parted -m -s *.img unit b print | tail -n 2 | head -n 1 | cut -f 2 -d ':' | tr -d '[:alpha:]'`
 
@@ -45,6 +69,11 @@ sudo sync
 ROOT_OFFSET=`sudo parted -m -s *.img unit b print | tail -n 1 | cut -f 2 -d ':' | tr -d '[:alpha:]'`
 
 sudo mount -o loop,offset=$ROOT_OFFSET *.img root
+echo
+echo -n -e '\e[0;34m' # Blue
+echo 'Changing password for pi user...'
+echo -n -e '\e[0m' # Reset color
+echo
 
 read -sp 'Pi Password: ' PI_PASSWORD
 echo ""
@@ -57,3 +86,9 @@ sudo umount root
 sudo sync
 
 rm -rf boot root
+
+echo '================================================'
+echo -n -e '\e[0;31m' # Blue
+echo -n -e '\e[0m' # Reset color
+echo "Generated $(ls *.img)"
+echo '================================================'
