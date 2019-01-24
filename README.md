@@ -1,7 +1,7 @@
 RPI Setup
 =========
 
-I wrote this script so that I could generate a raspberry pi image that is ready for me to point a ansible script at.
+I wrote this script so that I could generate a raspberry pi image that is ready for me to point ansible at.
 
 This downloads the latest raspbian stretch lite image and:
 
