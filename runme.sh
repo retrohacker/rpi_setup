@@ -1,7 +1,9 @@
 #!/bin/bash
 
+set -e
+
 echo '================================================'
-echo -n -e '\e[0;31m' # Blue
+echo -n -e '\e[0;31m' # Red
 echo ' ____  ____ ___   ____  _____ _____ _   _ ____  '
 echo '|  _ \|  _ \_ _| / ___|| ____|_   _| | | |  _ \ '
 echo '| |_) | |_) | |  \___ \|  _|   | | | | | | |_) |'
@@ -13,7 +15,7 @@ echo '      Pi Image Generator by @retrohacker        '
 echo -n -e '\e[0m' # Reset color
 echo '================================================'
 echo
-echo -n -e '\e[0;34m' # Blue
+echo -n -e '\e[0;31m' # Red
 echo 'Downloading image...'
 echo -n -e '\e[0m' # Reset color
 echo
@@ -26,17 +28,21 @@ chmod +x $PWD/end.sh
 # If we haven't downloaded a zip file, download it
 if [ -z "`ls | grep '.*\.zip'`" ]
 then
-  transmission-cli -g . -w . -f $PWD/end.sh $URL
+  transmission-cli -g . -w . -f $PWD/end.sh $URL || true
+else
+  echo "Already Downloaded"
 fi
 
 # If we haven't unzipped the image, do that
 if [ -z "`ls | grep '.*\.img'`" ]
 then
   unzip *.zip
+else
+  echo "Already Expanded"
 fi
 
 echo
-echo -n -e '\e[0;34m' # Blue
+echo -n -e '\e[0;31m' # Red
 echo 'Setting up SSH and WiFi...'
 echo -n -e '\e[0m' # Reset color
 echo
@@ -70,7 +76,7 @@ ROOT_OFFSET=`sudo parted -m -s *.img unit b print | tail -n 1 | cut -f 2 -d ':' 
 
 sudo mount -o loop,offset=$ROOT_OFFSET *.img root
 echo
-echo -n -e '\e[0;34m' # Blue
+echo -n -e '\e[0;31m' # Red
 echo 'Changing password for pi user...'
 echo -n -e '\e[0m' # Reset color
 echo
@@ -85,10 +91,11 @@ sudo umount root
 
 sudo sync
 
-rm -rf boot root
+rm -rf boot root blocklists end.sh resume torrents
 
+echo
 echo '================================================'
-echo -n -e '\e[0;31m' # Blue
+echo -n -e '\e[0;31m' # Red
 echo -n -e '\e[0m' # Reset color
 echo "Generated $(ls *.img)"
 echo '================================================'
